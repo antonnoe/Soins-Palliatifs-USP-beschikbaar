@@ -1,0 +1,354 @@
+<!-- File: usp-dept-checker.html -->
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>USP-checker per departement</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --primary:#800000;
+      --text:#111;
+      --muted:#555;
+      --border: rgba(128,0,0,.22);
+      --bg: #fff;
+      --soft: rgba(128,0,0,.04);
+      --okbg: rgba(0,0,0,.02);
+      --critbg: rgba(128,0,0,.06);
+      --shadow: 0 10px 24px rgba(0,0,0,.06);
+      --radius: 14px;
+    }
+
+    html,body{margin:0;padding:0;background:transparent;}
+    body{
+      font-family: Mulish, Arial, sans-serif;
+      color:var(--text);
+      line-height:1.8em;
+    }
+
+    .wrap{
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 14px;
+      box-sizing: border-box;
+    }
+
+    .card{
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    h3{
+      font-family: Poppins, Arial, sans-serif;
+      margin: 0 0 8px 0;
+      color: var(--primary);
+      font-size: 20px;
+      line-height: 1.3em;
+    }
+
+    p{margin: 0 0 12px 0; color: var(--text);}
+    .hint{color: var(--muted); margin-top: 6px; font-size: 14px;}
+
+    .formRow{
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 10px 0 6px 0;
+    }
+
+    label{
+      font-weight: 700;
+      color: var(--text);
+      margin-right: 6px;
+    }
+
+    input[type="text"]{
+      flex: 1 1 220px;
+      min-width: 180px;
+      font-family: Mulish, Arial, sans-serif;
+      font-size: 16px;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,.18);
+      outline: none;
+      box-sizing: border-box;
+    }
+    input[type="text"]:focus{
+      border-color: rgba(128,0,0,.55);
+      box-shadow: 0 0 0 4px rgba(128,0,0,.10);
+    }
+
+    button{
+      font-family: Poppins, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(128,0,0,.35);
+      background: rgba(128,0,0,.06);
+      color: var(--primary);
+      cursor: pointer;
+      transition: transform .03s ease, background .15s ease;
+      white-space: nowrap;
+    }
+    button:hover{background: rgba(128,0,0,.10);}
+    button:active{transform: translateY(1px);}
+
+    .msg{
+      display:none;
+      margin-top: 12px;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,.12);
+      background: var(--okbg);
+    }
+    .msg h4{
+      font-family: Poppins, Arial, sans-serif;
+      margin: 0 0 6px 0;
+      font-size: 16px;
+      line-height: 1.35em;
+    }
+    .msg p{margin: 0 0 10px 0;}
+    .msg p:last-child{margin-bottom: 0;}
+
+    .ok{
+      border-color: rgba(0,0,0,.14);
+      background: var(--okbg);
+    }
+    .ok h4{color: #0b6b2b;}
+    .crit{
+      border-color: rgba(128,0,0,.25);
+      background: var(--critbg);
+    }
+    .crit h4{color: var(--primary);}
+    .err{
+      border-color: rgba(0,0,0,.18);
+      background: rgba(0,0,0,.03);
+    }
+    .err h4{color: #333;}
+
+    .pill{
+      display:inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(128,0,0,.25);
+      background: var(--soft);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.6em;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .mini{
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    .footerNote{
+      margin-top: 12px;
+      font-size: 12px;
+      color: rgba(0,0,0,.55);
+    }
+
+    @media (max-width: 520px){
+      .wrap{padding: 10px;}
+      .card{padding: 14px;}
+      button{width:100%;}
+      input[type="text"]{min-width: 0;}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card" role="region" aria-label="USP checker">
+      <h3>🔍 Controleer uw departement <span class="pill">USP</span></h3>
+      <p>Voer uw departementcode in (meestal de <strong>eerste 2 cijfers</strong> van uw postcode) om te zien of er een Unité de Soins Palliatifs (USP) beschikbaar is.</p>
+
+      <div class="formRow">
+        <label for="deptInput">Departementcode</label>
+        <input
+          id="deptInput"
+          type="text"
+          inputmode="text"
+          autocomplete="off"
+          placeholder="Bijv. 75, 33, 2A, 973"
+          aria-describedby="deptHelp"
+        />
+        <button type="button" id="checkBtn">Controleren</button>
+      </div>
+      <div class="hint" id="deptHelp">
+        Voor Corsica: gebruik <strong>2A</strong> of <strong>2B</strong>. Voor overzeese departementen: gebruik <strong>971–976</strong> (3 cijfers).
+      </div>
+
+      <div class="msg ok" id="resOk" aria-live="polite">
+        <h4>✓ Palliatieve zorg beschikbaar</h4>
+        <p>Dit departement beschikt over minimaal één Unité de Soins Palliatifs (USP). De toegang tot gespecialiseerde levenseindezorg is in principe geborgd.</p>
+        <p><strong>Toch aanbevolen:</strong> stel uw Directives Anticipées op en registreer deze in Mon Espace Santé. Een wilsverklaring biedt extra zekerheid dat uw wensen worden gerespecteerd.</p>
+      </div>
+
+      <div class="msg crit" id="resCrit" aria-live="polite">
+        <h4>⚠️ KRITIEK: Geen Unité de Soins Palliatifs</h4>
+        <p>Dit departement beschikt <strong>niet</strong> over een gespecialiseerde Unité de Soins Palliatifs (USP). Patiënten worden opgevangen door mobiele teams of in niet-gespecialiseerde ziekenhuisafdelingen.</p>
+        <p><strong>Aanbeveling:</strong> zorg dat uw Directives Anticipées volledig en actueel zijn, geregistreerd in Mon Espace Santé, en dat uw Personne de Confiance goed geïnformeerd is. Dit is in uw regio van cruciaal belang.</p>
+      </div>
+
+      <div class="msg err" id="resErr" aria-live="polite">
+        <h4>Niet herkend</h4>
+        <p id="errText">Voer een geldige departementcode in.</p>
+        <p class="mini">
+          Geldige voorbeelden: <strong>01–95</strong>, <strong>2A</strong>, <strong>2B</strong>, <strong>971</strong>, <strong>972</strong>, <strong>973</strong>, <strong>974</strong>, <strong>976</strong>.
+        </p>
+      </div>
+
+      <div class="footerNote">
+        Let op: voor “97” is 2-cijferige invoer niet voldoende omdat 971–976 niet dezelfde uitkomst hebben.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      // Jouw lijsten (op basis van de aangeleverde selectie)
+      const CRIT = new Set([
+        "08","18","19","23","28","32","36","39","46","48","52","53","55","61","66","70","72","82","88","973","976"
+      ]);
+
+      const OK = new Set([
+        "01","02","03","04","05","06","07","09","10","11","12","13","14","15","16","17","21","22","24","25","26","27","29","30","31","33","34","35","37","38","40","41","42","43","44","45","47","49","50","51","54","56","57","58","59","60","62","63","64","65","67","68","69","71","73","74","75","76","77","78","79","80","81","83","84","85","86","87","89","90","91","92","93","94","95","2A","2B","971","972","974"
+      ]);
+
+      const elInput = document.getElementById("deptInput");
+      const elBtn = document.getElementById("checkBtn");
+
+      const resOk = document.getElementById("resOk");
+      const resCrit = document.getElementById("resCrit");
+      const resErr = document.getElementById("resErr");
+      const errText = document.getElementById("errText");
+
+      function hideAll(){
+        resOk.style.display = "none";
+        resCrit.style.display = "none";
+        resErr.style.display = "none";
+      }
+
+      function normalize(raw){
+        if(!raw) return "";
+        let v = String(raw).trim().toUpperCase();
+        v = v.replace(/\s+/g,"");
+
+        // Als iemand "dept 75" typt: haal niet-alfanum weg
+        v = v.replace(/[^0-9A-Z]/g,"");
+
+        // Corsica: soms wordt "20" gebruikt (postcodes), maar departement is 2A/2B
+        if(v === "20"){
+          return "20"; // speciaal afvangen met melding
+        }
+
+        // Als er 1 cijfer is (bijv. "7"), maak "07"
+        if(/^\d$/.test(v)){
+          v = "0" + v;
+        }
+
+        // Als 3 cijfers (DOM) laat zo
+        if(/^\d{3}$/.test(v)){
+          return v;
+        }
+
+        // 2 cijfers (01–95)
+        if(/^\d{2}$/.test(v)){
+          return v;
+        }
+
+        // 2A/2B
+        if(/^2A$/.test(v) || /^2B$/.test(v)){
+          return v;
+        }
+
+        return v;
+      }
+
+      function check(){
+        hideAll();
+        const v = normalize(elInput.value);
+
+        if(!v){
+          return; // leeg: toon niets
+        }
+
+        // Speciaal: 97 is onbeslisbaar met 2 cijfers
+        if(v === "97"){
+          resErr.style.display = "block";
+          errText.textContent = "Voor overzeese departementen is “97” onvoldoende. Voer 971–976 in (3 cijfers).";
+          return;
+        }
+
+        // Speciaal: 20 (Corsica postcodes) -> vraag om 2A/2B
+        if(v === "20"){
+          resErr.style.display = "block";
+          errText.textContent = "Voor Corsica gebruikt men departementcodes 2A of 2B (niet “20”).";
+          return;
+        }
+
+        // Validatie: 2 cijfers 01–95
+        if(/^\d{2}$/.test(v)){
+          const n = parseInt(v, 10);
+          if(n < 1 || n > 95){
+            resErr.style.display = "block";
+            errText.textContent = "Deze 2-cijferige code valt buiten 01–95. Controleer uw invoer.";
+            return;
+          }
+        }
+
+        // Resultaat
+        if(OK.has(v)){
+          resOk.style.display = "block";
+          return;
+        }
+        if(CRIT.has(v)){
+          resCrit.style.display = "block";
+          return;
+        }
+
+        // Onbekend in dataset
+        resErr.style.display = "block";
+        errText.textContent = "Deze departementcode staat niet in de huidige lijst. Controleer de code of breid de dataset uit.";
+      }
+
+      // Klik
+      elBtn.addEventListener("click", check);
+
+      // Enter in input
+      elInput.addEventListener("keydown", function(e){
+        if(e.key === "Enter"){
+          e.preventDefault();
+          check();
+        }
+      });
+
+      // Live check (lichte debounce)
+      let t = null;
+      elInput.addEventListener("input", function(){
+        if(t) window.clearTimeout(t);
+        t = window.setTimeout(check, 220);
+      });
+
+      // Start: niets tonen
+      hideAll();
+    })();
+  </script>
+</body>
+</html>
